@@ -1,5 +1,6 @@
 Feature: User Login
 
+
   Background:
     Given a registered user exists with username "validUser" and password "validPass"
     And a locked user exists with username "lockedUser" and password "anyPass"
