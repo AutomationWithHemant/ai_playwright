@@ -1,0 +1,17 @@
+<!doctype html><html><head><title>Demo Store - Login</title><style>body{font-family:sans-serif;max-width:420px;margin:40px auto}label{display:block;margin-top:10px}input{width:100%;padding:6px}button{margin-top:14px;padding:8px 16px}.error{color:#c00;margin-top:10px}.ok{color:#080;margin-top:10px}</style></head><body>
+<h1>Demo Store</h1>
+<label for="user-name">Username</label><input id="user-name">
+<label for="password">Password</label><input id="password" type="password">
+<button id="login-button">Login</button>
+<div id="error" class="error" role="alert"></div>
+<script>
+document.getElementById('login-button').onclick = () => {
+  const u = document.getElementById('user-name').value, p = document.getElementById('password').value;
+  const err = document.getElementById('error');
+  if (!u) return err.textContent = 'Username is required';
+  if (!p) return err.textContent = 'Password is required';
+  if (u === 'locked_out_user') return err.textContent = 'Sorry, this user has been locked out.';
+  if (u === 'standard_user' && p === 'secret_sauce') return location.href = '/inventory';
+  err.textContent = 'Username and password do not match';
+};
+</script></body></html>

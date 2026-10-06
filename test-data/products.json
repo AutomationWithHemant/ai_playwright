@@ -1,0 +1,74 @@
+[
+  {
+    "name": "Cotton Crew-Neck T-Shirt",
+    "category": "Clothing",
+    "price": 499,
+    "stock": 120
+  },
+  {
+    "name": "Slim Fit Denim Jeans",
+    "category": "Clothing",
+    "price": 1799,
+    "stock": 45
+  },
+  {
+    "name": "Handloom Cotton Kurta",
+    "category": "Clothing",
+    "price": 1299,
+    "stock": 0
+  },
+  {
+    "name": "Wireless Earbuds",
+    "category": "Electronics",
+    "price": 2499,
+    "stock": 80
+  },
+  {
+    "name": "10000 mAh Power Bank",
+    "category": "Electronics",
+    "price": 1199,
+    "stock": 200
+  },
+  {
+    "name": "32-inch Smart LED TV",
+    "category": "Electronics",
+    "price": 13999,
+    "stock": 0
+  },
+  {
+    "name": "Non-Stick Tawa 28 cm",
+    "category": "Kitchen",
+    "price": 899,
+    "stock": 60
+  },
+  {
+    "name": "Stainless Steel Pressure Cooker 5L",
+    "category": "Kitchen",
+    "price": 2299,
+    "stock": 35
+  },
+  {
+    "name": "Mixer Grinder 750W",
+    "category": "Kitchen",
+    "price": 3499,
+    "stock": 0
+  },
+  {
+    "name": "Yoga Mat 6 mm",
+    "category": "Sports",
+    "price": 699,
+    "stock": 150
+  },
+  {
+    "name": "Cricket Bat - Kashmir Willow",
+    "category": "Sports",
+    "price": 1599,
+    "stock": 25
+  },
+  {
+    "name": "Adjustable Dumbbell Set 20 kg",
+    "category": "Sports",
+    "price": 4999,
+    "stock": 12
+  }
+]

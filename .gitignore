@@ -1,0 +1,9 @@
+node_modules
+.env
+playwright-report
+test-results
+results.json
+ai-analysis.md
+run-summary.md
+healed-locators.jsonl
+results-fail-demo.json

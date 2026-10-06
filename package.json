@@ -1,0 +1,33 @@
+{
+  "name": "ai-playwright-course",
+  "private": true,
+  "scripts": {
+    "app": "node demo-app/server.js",
+    "test": "playwright test",
+    "test:ui": "playwright test --ui",
+    "test:fail-demo": "playwright test --config=playwright.fail-demo.config.ts",
+    "gen:users": "tsx scripts/gen-users.ts",
+    "gen:edge": "tsx scripts/gen-edge-cases.ts",
+    "gen:products": "tsx scripts/gen-products.ts",
+    "db:up": "docker compose up -d",
+    "heal:apply": "tsx scripts/apply-heals.ts",
+    "demo:reset": "tsx scripts/reset-demo.ts",
+    "gherkin": "tsx scripts/req-to-gherkin.ts",
+    "summary": "tsx scripts/summarise-run.ts",
+    "demo:all": "tsx scripts/demo-all.ts",
+    "module3": "tsx scripts/module3.ts"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.56.0",
+    "@types/node": "^20.14.0",
+    "@types/pg": "^8.11.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.5.0"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "openai": "^5.0.0",
+    "pg": "^8.12.0",
+    "zod": "^3.23.8"
+  }
+}

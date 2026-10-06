@@ -1,0 +1,61 @@
+name: e2e-ai
+on: [push, pull_request, workflow_dispatch]
+permissions:
+  contents: write
+  pull-requests: write
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    env:
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      OPENAI_MODEL: gpt-4o
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      - run: npm ci && npx playwright install --with-deps chromium
+      - run: npx playwright test
+
+      # Module 3.4 - LLM summary of the run
+      - name: Summarise run
+        if: always()
+        run: npx tsx scripts/summarise-run.ts
+
+      # Module 3.2 - AI analysis on the job page and as a PR comment
+      - name: Publish AI analysis
+        if: always()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          [ -f run-summary.md ] && cat run-summary.md >> $GITHUB_STEP_SUMMARY
+          if [ -f ai-analysis.md ]; then
+            cat ai-analysis.md >> $GITHUB_STEP_SUMMARY
+            if [ "${{ github.event_name }}" = "pull_request" ]; then
+              gh pr comment ${{ github.event.pull_request.number }} --body-file ai-analysis.md
+            fi
+          fi
+
+      # Module 2.2 - open a PR with healed locators (never auto-merge)
+      - name: Open PR with healed locators
+        if: always() && github.event_name != 'pull_request' && hashFiles('healed-locators.jsonl') != ''
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          npx tsx scripts/apply-heals.ts
+          BRANCH=auto-heal/${{ github.run_id }}
+          git config user.name "heal-bot"
+          git config user.email "heal-bot@users.noreply.github.com"
+          git checkout -b $BRANCH
+          git add tests
+          git commit -m "chore: auto-heal broken locators"
+          git push origin $BRANCH
+          gh pr create --base ${{ github.ref_name }} --title "Auto-heal: updated locators" --body-file healed-locators.jsonl
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: reports
+          path: |
+            playwright-report
+            ai-analysis.md
+            run-summary.md

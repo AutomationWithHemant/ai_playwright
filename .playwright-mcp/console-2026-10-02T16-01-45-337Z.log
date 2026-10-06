@@ -1,0 +1,2 @@
+[     283ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://www.saucedemo.com/login:0
+[     332ms] [WARNING] No routes matched location "/login"  @ https://www.saucedemo.com/assets/index-D3OxT1jE.js:1

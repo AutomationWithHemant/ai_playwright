@@ -1,0 +1,14 @@
+<!doctype html><html><head><title>Demo Store - Signup</title><style>body{font-family:sans-serif;max-width:420px;margin:40px auto}label{display:block;margin-top:10px}input{width:100%;padding:6px}button{margin-top:14px;padding:8px 16px}.error{color:#c00;margin-top:10px}.ok{color:#080;margin-top:10px}</style></head><body>
+<h1>Signup</h1>
+<label for="age">Age</label><input id="age">
+<button id="submit">Submit</button>
+<div data-testid="age-error" class="error" style="display:none">Age must be a whole number from 18 to 60</div>
+<div id="done" class="ok"></div>
+<script>
+document.getElementById('submit').onclick = () => {
+  const raw = document.getElementById('age').value;
+  const valid = /^\d+$/.test(raw) && Number(raw) >= 18 && Number(raw) <= 60;
+  document.querySelector('[data-testid=age-error]').style.display = valid ? 'none' : 'block';
+  document.getElementById('done').textContent = valid ? 'Saved' : '';
+};
+</script></body></html>

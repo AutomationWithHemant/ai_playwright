@@ -1,0 +1,62 @@
+[
+  {
+    "input": "17",
+    "expected": "reject",
+    "reason": "min-1"
+  },
+  {
+    "input": "18",
+    "expected": "accept",
+    "reason": "min"
+  },
+  {
+    "input": "19",
+    "expected": "accept",
+    "reason": "min+1"
+  },
+  {
+    "input": "59",
+    "expected": "accept",
+    "reason": "max-1"
+  },
+  {
+    "input": "60",
+    "expected": "accept",
+    "reason": "max"
+  },
+  {
+    "input": "61",
+    "expected": "reject",
+    "reason": "max+1"
+  },
+  {
+    "input": "",
+    "expected": "reject",
+    "reason": "empty - field is required"
+  },
+  {
+    "input": "-5",
+    "expected": "reject",
+    "reason": "negative number"
+  },
+  {
+    "input": "25.5",
+    "expected": "reject",
+    "reason": "decimal, not a whole number"
+  },
+  {
+    "input": "abc",
+    "expected": "reject",
+    "reason": "non-numeric"
+  },
+  {
+    "input": "   ",
+    "expected": "reject",
+    "reason": "only spaces"
+  },
+  {
+    "input": "99999999999",
+    "expected": "reject",
+    "reason": "very large number"
+  }
+]
