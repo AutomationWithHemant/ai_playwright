@@ -14,7 +14,7 @@ pipeline {
         timeout(time:30,unit: 'MINUTES')
     }
     triggers {
-        pollSCM('H/5 * * * * *') // check github repo for new commits about every 5 minutes
+        pollSCM('H/5 * * * *') // check github repo for new commits about every 5 minutes
     }
 
     stages {
