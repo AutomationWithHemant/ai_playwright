@@ -26,7 +26,7 @@ pipeline {
         }
         stage('Playwright tests') {
             steps {
-                sh "npx playwright test --project=${param.BROWSER}"
+                sh "npx playwright test --project=${params.BROWSER}"
             }
         }
     }
