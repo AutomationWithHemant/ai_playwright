@@ -5,6 +5,7 @@ pipeline {
     }
     environment {
         CI = "true" //You have to set this and jenkins will not set it automatically
+        OPENAI_API_KEY = credentials('openai-api-key')   // ID exactly match honi chahiye
     }
     parameters {
         choice(name: 'BROWSER', choices: ['chromium','firefox','webkit'],
