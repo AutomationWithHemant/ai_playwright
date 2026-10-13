@@ -1,6 +1,7 @@
 import 'dotenv/config';
 import { defineConfig, devices, type ReporterDescription } from '@playwright/test';
 
+// 1. Reporter list config ke BAHAR banti hai
 const reporters: ReporterDescription[] = [
   ['list'],
   ['html', { open: 'never' }],
@@ -34,4 +35,5 @@ export default defineConfig({
     { name: 'webkit',   use: { ...devices['Desktop Safari'] } },
   ],
   reporter: reporters,
+});
 });
