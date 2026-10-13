@@ -1,0 +1,80 @@
+<testsuites id="" name="" tests="18" failures="0" skipped="18" errors="0" time="0.020999000000000025">
+<testsuite name="age-boundary.spec.ts" timestamp="2026-10-13T15:04:28.200Z" hostname="chromium" tests="12" failures="0" skipped="12" time="0" errors="0">
+<testcase name="age &quot;17&quot; should reject - min-1" classname="age-boundary.spec.ts">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="age &quot;18&quot; should accept - min" classname="age-boundary.spec.ts">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="age &quot;19&quot; should accept - min+1" classname="age-boundary.spec.ts">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="age &quot;59&quot; should accept - max-1" classname="age-boundary.spec.ts">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="age &quot;60&quot; should accept - max" classname="age-boundary.spec.ts">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="age &quot;61&quot; should reject - max+1" classname="age-boundary.spec.ts">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="age &quot;&quot; should reject - empty - field is required" classname="age-boundary.spec.ts">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="age &quot;-5&quot; should reject - negative number" classname="age-boundary.spec.ts">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="age &quot;25.5&quot; should reject - decimal, not a whole number" classname="age-boundary.spec.ts">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="age &quot;abc&quot; should reject - non-numeric" classname="age-boundary.spec.ts">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="age &quot;   &quot; should reject - only spaces" classname="age-boundary.spec.ts">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="age &quot;99999999999&quot; should reject - very large number" classname="age-boundary.spec.ts">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="login-heal.spec.ts" timestamp="2026-10-13T15:04:28.200Z" hostname="chromium" tests="1" failures="0" skipped="1" time="0" errors="0">
+<testcase name="login with self-healing locator" classname="login-heal.spec.ts">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="register.spec.ts" timestamp="2026-10-13T15:04:28.200Z" hostname="chromium" tests="5" failures="0" skipped="5" time="0" errors="0">
+<testcase name="register aarav.sharma@example.com" classname="register.spec.ts">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="register priya.nair@example.com" classname="register.spec.ts">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="register rohit.verma@example.com" classname="register.spec.ts">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="register sneha.kulkarni@example.com" classname="register.spec.ts">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="register imran.qureshi@example.com" classname="register.spec.ts">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+</testsuites>
