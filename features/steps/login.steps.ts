@@ -42,8 +42,9 @@ When(
 );
 
 Then('the user should see {string}', async ({ page }, expectedMessage: string) => {
-  if (expectedMessage === 'Products page is displayed') {
-    await expect(page.getByRole('heading', { name: 'Products' })).toBeVisible();
+  if (expectedMessage === 'User lands on the Products page') {
+    await expect(page).toHaveURL(/inventory/);
+    await expect(page.locator('.title')).toHaveText('Products');
   } else {
     const errorBox = page.locator('#error');
     await expect(errorBox).toBeVisible();
