@@ -22,6 +22,7 @@ export async function healingLocator(page: Page, selector: string, intent: strin
   if (await healed.count() !== 1) {
     throw new Error(`Self-heal failed: '${selector}' -> '${newSelector}' matched ${await healed.count()} elements`);
   }
+  let healRecord: Record<string, unknown> | undefined;
 
   fs.appendFileSync('healed-locators.jsonl',
     JSON.stringify({ test: test.info().title, old: selector, new: newSelector, intent }) + '\n');
