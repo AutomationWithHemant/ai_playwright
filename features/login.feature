@@ -10,7 +10,7 @@ Feature: User Login
 
     Examples:
       | username     | password      | message                                           |
-      | validUser    | validPassword | User lands on the Products page                   |
+      | validUser    | validPassword | Products page is displayed                        |
       |              | validPassword | Username is required                              |
       | validUser    |               | Password is required                              |
       | lockedUser   | anyPassword   | Sorry, this user has been locked out.             |
