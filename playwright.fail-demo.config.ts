@@ -11,5 +11,6 @@ export default defineConfig({
     ['list'],
     ['json', { outputFile: 'results-fail-demo.json' }], // keeps the main results.json clean
     ['./reporters/ai-rca-reporter.ts'],
+    ['allure-playwright', { resultsDir: 'allure-results' }]
   ],
 });

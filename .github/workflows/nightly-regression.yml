@@ -1,0 +1,106 @@
+# .github/workflows/nightly-regression.yml
+name: nightly-regression-ai
+
+on:
+  schedule:
+    # Runs every night at 18:30 UTC (12:00 AM Midnight IST)
+    - cron: '30 18 * * *'
+  workflow_dispatch:
+    inputs:
+      browser_scope:
+        description: 'Browsers to execute (all or chromium)'
+        required: true
+        default: 'all'
+        type: choice
+        options:
+          - all
+          - chromium
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+  issues: write
+
+jobs:
+  nightly-e2e:
+    runs-on: ubuntu-latest
+    env:
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      OPENAI_MODEL: gpt-4o
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install dependencies & all Playwright browsers
+        run: npm ci && npx playwright install --with-deps
+
+      - name: Generate BDD specs & execute full cross-browser regression
+        run: |
+          npx bddgen
+          if [ "${{ inputs.browser_scope }}" = "chromium" ]; then
+            npx playwright test --project=chromium --project=bdd-chromium
+          else
+            npx playwright test
+          fi
+
+      - name: Generate AI Executive Run Summary (run-summary.md)
+        if: always()
+        run: npx tsx scripts/summarise-run.ts
+
+      - name: Copy custom Allure categories
+        if: always()
+        run: |
+          mkdir -p allure-results
+          [ -f categories.json ] && cp categories.json allure-results/categories.json || true
+
+      - name: Checkout previous gh-pages history
+        uses: actions/checkout@v4
+        if: always()
+        continue-on-error: true
+        with:
+          ref: gh-pages
+          path: gh-pages
+
+      - name: Build Allure Report with Nightly History
+        uses: simple-elf/allure-report-action@v1.15
+        if: always()
+        with:
+          allure_results: allure-results
+          gh_pages: gh-pages
+          allure_report: allure-report
+          allure_history: allure-history
+          keep_reports: 20
+
+      - name: Publish Nightly Allure Report to GitHub Pages
+        if: always()
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: allure-history
+
+      - name: Publish Nightly Executive Summary & Open GitHub Issue on Failure
+        if: always()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          REPORT_URL="https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/${{ github.run_number }}/"
+          echo "## 🌙 Nightly AI Regression Report" >> $GITHUB_STEP_SUMMARY
+          echo "🔗 **Live Allure Report:** [$REPORT_URL]($REPORT_URL)" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          [ -f run-summary.md ] && cat run-summary.md >> $GITHUB_STEP_SUMMARY
+          [ -f ai-analysis.md ] && cat ai-analysis.md >> $GITHUB_STEP_SUMMARY
+
+          # Automatically create a GitHub Issue if nightly regression fails
+          if [ -f ai-analysis.md ]; then
+            gh issue create \
+              --title "🚨 Nightly Regression Failure — Run #${{ github.run_number }}" \
+              --body "$(cat run-summary.md 2>/dev/null; echo ''; echo '### Live Allure Report'; echo $REPORT_URL; echo ''; cat ai-analysis.md)" || true
+          fi

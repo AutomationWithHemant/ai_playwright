@@ -1,8 +1,17 @@
+# .github/workflows/e2e.yml
 name: e2e-ai
-on: [push, pull_request]
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
 permissions:
   contents: write
   pull-requests: write
+  pages: write
+  id-token: write
+
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -10,23 +19,72 @@ jobs:
       OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
       OPENAI_MODEL: gpt-4o
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with: { node-version: 20 }
-      - run: npm ci && npx playwright install --with-deps chromium
-      - run: npx playwright test
+      - name: Checkout source code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install dependencies and Playwright browsers
+        run: npm ci && npx playwright install --with-deps chromium
+
+      - name: Generate BDD tests and run Playwright suite
+        run: |
+          npx bddgen
+          npx playwright test --project=chromium --project=bdd-chromium
 
       # Module 3.4 - LLM summary of the run
-      - name: Summarise run
+      - name: Summarise run via GPT-4o
         if: always()
         run: npx tsx scripts/summarise-run.ts
 
-      # Module 3.2 - AI analysis on the job page and as a PR comment
-      - name: Publish AI analysis
+      # Copy categories.json into allure-results before building Allure Report
+      - name: Prepare Allure categories
+        if: always()
+        run: |
+          mkdir -p allure-results
+          [ -f categories.json ] && cp categories.json allure-results/categories.json || true
+
+      # Fetch previous Allure history from gh-pages branch
+      - name: Get Allure history from gh-pages
+        uses: actions/checkout@v4
+        if: always()
+        continue-on-error: true
+        with:
+          ref: gh-pages
+          path: gh-pages
+
+      # Build Allure Report with 20-build history
+      - name: Build Allure Report with History
+        uses: simple-elf/allure-report-action@v1.15
+        if: always()
+        with:
+          allure_results: allure-results
+          gh_pages: gh-pages
+          allure_report: allure-report
+          allure_history: allure-history
+          keep_reports: 20
+
+      # Deploy Allure Report to GitHub Pages
+      - name: Deploy Allure Report to GitHub Pages
+        if: always() && github.event_name != 'pull_request'
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: allure-history
+
+      # Module 3.2 - AI analysis + Live Allure link on the job summary and PR comment
+      - name: Publish AI analysis & Allure link
         if: always()
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          echo "### 📊 [Open Live Allure HTML Report (Build #${{ github.run_number }})](https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/${{ github.run_number }}/)" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
           [ -f run-summary.md ] && cat run-summary.md >> $GITHUB_STEP_SUMMARY
           if [ -f ai-analysis.md ]; then
             cat ai-analysis.md >> $GITHUB_STEP_SUMMARY
@@ -51,11 +109,14 @@ jobs:
           git push origin $BRANCH
           gh pr create --base ${{ github.ref_name }} --title "Auto-heal: updated locators" --body-file healed-locators.jsonl
 
-      - uses: actions/upload-artifact@v4
+      - name: Upload Playwright, Allure & AI artifacts
+        uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: reports
+          name: reports-${{ github.run_number }}
           path: |
             playwright-report
+            allure-report
             ai-analysis.md
             run-summary.md
+            
